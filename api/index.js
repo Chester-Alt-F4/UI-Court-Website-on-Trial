@@ -21,10 +21,19 @@ function getTextDensity(html, text) {
   return 'high';
 }
 
+// URL Normalization helper
+function normalizeUrl(url) {
+  if (!url.startsWith('http')) {
+    return `https://${url}`;
+  }
+  return url;
+}
+
 // Step 1: Fetch
 async function fetchWebsite(url) {
+  const targetUrl = normalizeUrl(url);
   try {
-    const response = await axios.get(url, {
+    const response = await axios.get(targetUrl, {
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
       },
