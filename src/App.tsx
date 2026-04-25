@@ -73,11 +73,13 @@ function App() {
   const [currentStep, setCurrentStep] = useState<number>(-1);
   const [showEvidence, setShowEvidence] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const startTrial = async () => {
     if (!url) return;
     setLoading(true);
     setAuditData(null);
+    setErrorMsg(null);
     setCurrentStep(0);
 
     try {
@@ -90,9 +92,10 @@ function App() {
       clearInterval(interval);
       setCurrentStep(4);
       setAuditData(response.data);
-    } catch (error) {
-      console.error(error);
-      alert('The trial was interrupted! Check console for errors.');
+    } catch (error: any) {
+      console.error('Trial error:', error);
+      const msg = error?.response?.data?.error || error?.message || 'Unknown error';
+      setErrorMsg(`Trial interrupted: ${msg}`);
     } finally {
       setLoading(false);
     }
@@ -162,7 +165,9 @@ function App() {
         {/* Agent Thought Box */}
         <div className="mt-8 bg-[#2a1a17]/80 p-4 border-l-4 border-court-gold font-body text-sm italic text-court-gold/80 min-h-[60px]">
           <span className="font-pixel text-xs not-italic block mb-2 underline">AGENT THOUGHTS:</span>
-          {loading ? (
+          {errorMsg ? (
+            <p className="text-red-400 not-italic">{errorMsg}</p>
+          ) : loading ? (
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
