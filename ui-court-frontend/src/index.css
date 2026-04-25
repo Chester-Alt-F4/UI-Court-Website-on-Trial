@@ -1,0 +1,62 @@
+@import "tailwindcss";
+
+@theme {
+  --color-court-brown: #1a110f;
+  --color-court-gold: #c9a03d;
+  --font-pixel: "Press Start 2P", cursive;
+  --font-body: Inter, sans-serif;
+}
+
+:root {
+  --court-gold: #c9a03d;
+  --court-brown: #1a110f;
+}
+
+body {
+  margin: 0;
+  overflow-x: hidden;
+}
+
+.pixel-border {
+  border: 4px solid var(--court-gold);
+  position: relative;
+}
+
+.pixel-border::before {
+  content: '';
+  position: absolute;
+  top: -4px; right: -4px; bottom: -4px; left: -4px;
+  border: 4px solid var(--court-gold);
+  pointer-events: none;
+}
+
+/* Retro Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--court-brown);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--court-gold);
+  border: 2px solid var(--court-brown);
+}
+
+@keyframes gavel-slam {
+  0% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(-45deg) scale(1.2); }
+  100% { transform: rotate(15deg) scale(1); }
+}
+
+.animate-gavel {
+  animation: gavel-slam 0.5s ease-out forwards;
+}
+
+.pixel-corners {
+  clip-path: polygon(
+    0 4px, 4px 4px, 4px 0,
+    calc(100% - 4px) 0, calc(100% - 4px) 4px, 100% 4px,
+    100% calc(100% - 4px), calc(100% - 4px) calc(100% - 4px), calc(100% - 4px) 100%,
+    4px 100%, 4px calc(100% - 4px), 0 calc(100% - 4px)
+  );
+}
