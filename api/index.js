@@ -1,15 +1,15 @@
-const express = require('express');
-const cors = require('cors');
-const axios = require('axios');
-const cheerio = require('cheerio');
-const { GoogleGenerativeAI } = require('@google/generative-ai');
-require('dotenv').config();
+import express from 'express';
+import cors from 'cors';
+import axios from 'axios';
+import * as cheerio from 'cheerio';
+import { GoogleGenerativeAI } from '@google/generative-ai';
+import 'dotenv/config';
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || 'MOCK_KEY');
 
 // Helper to determine text density
 function getTextDensity(html, text) {
@@ -130,7 +130,7 @@ function ruleBasedAnalysis(data) {
 // Step 4 & 5: AI Judge and Act
 async function aiAudit(websiteData, analysis) {
   // If no valid key, return a high-quality mock response for demo purposes
-  if (!process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY === 'YOUR_API_KEY_HERE') {
+  if (!process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY === 'YOUR_API_KEY_HERE' || process.env.GEMINI_API_KEY === 'MOCK_KEY') {
     return getMockAiResponse(websiteData, analysis);
   }
 
@@ -195,7 +195,7 @@ function getMockAiResponse(websiteData, analysis) {
       `Optimize CTA visibility with contrasting background colors.`
     ],
     sitePurpose: websiteData.title,
-    redesignPrompt: `Create a modern, clean, and responsive web UI for ${websiteData.title}.\n\nIssues to fix:\n${analysis.issues.map(i => `- ${i.charge}`).join('\n')}\n\nRequirements:\n- Clear visual hierarchy\- Consistent spacing\- Legible typography\- Mobile-first design`,
+    redesignPrompt: `Create a modern, clean, and responsive web UI for ${websiteData.title}.\n\nIssues to fix:\n${analysis.issues.map(i => `- ${i.charge}`).join('\n')}\n\nRequirements:\n- Clear visual hierarchy\n- Consistent spacing\n- Legible typography\n- Mobile-first design`,
     mockMode: true
   };
 }
@@ -261,4 +261,4 @@ if (process.env.NODE_ENV !== 'production') {
   });
 }
 
-module.exports = app;
+export default app;
